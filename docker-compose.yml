@@ -1,0 +1,46 @@
+services:
+  php:
+    container_name: nux_game_php-fpm
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    environment:
+      DB_HOST: mysql
+      DB_PASSWORD: root
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    user: "1000:1000"
+
+  nginx:
+    image: nginx:1.25
+    ports:
+      - "8083:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+
+  mysql:
+    container_name: nux_game_mysql
+    image: mysql:8.4
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: nux_game
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
