@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username', 20)->unique();
             $table->string('phonenumber', 15)->unique();
+            $table->string('link_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

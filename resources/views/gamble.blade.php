@@ -17,34 +17,37 @@
                 <h2>Unique Link</h2>
                 <p class="link-box">{{ session('url') }}</p>
                 <p class="meta">Link status: Active | Expires in: 7 days</p>
-                <div class="row">
-                    <button class="btn btn-secondary" type="button">Regenerate Link</button>
-                    <button class="btn btn-danger" type="button">Deactivate Link</button>
-                </div>
 
             </article>
         @endif
         <article class="card">
             <h2>Imfeelinglucky</h2>
             <div class="row">
-                <button class="btn btn-primary" type="button">Imfeelinglucky</button>
-                <a href="{{ route('get_histories', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">History</button></a>
+                <a href="{{ route('calculate_gamble', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">Imfeelinglucky</button></a>
+                <a href="{{ route('get_histories', [$user['id']]) }}">
+                    <button class="btn btn-secondary" type="button">History</button>
+                </a>
+                <a href="{{ route('generate_link', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">Generate new link</button></a>
+                <a href="{{ route('unsigned_link', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">Unsigned link</button></a>
             </div>
 
-            <div class="result">
-                <div class="result-item">
-                    <p class="result-label">Random Number</p>
-                    <p class="result-value">742</p>
+            @if(session()->has('result'))
+                @php($result = session('result'))
+                <div class="result">
+                    <div class="result-item">
+                        <p class="result-label">Random Number</p>
+                        <p class="result-value">{{$result['number']}}</p>
+                    </div>
+                    <div class="result-item">
+                        <p class="result-label">Result</p>
+                        <p class="result-value"><span class="badge {{$result['status'] === 'win' ? 'badge-win' : 'badge-lose'}}">{{$result['status']}}</span></p>
+                    </div>
+                    <div class="result-item">
+                        <p class="result-label">Win Amount</p>
+                        <p class="result-value">{{$result['amount']}}</p>
+                    </div>
                 </div>
-                <div class="result-item">
-                    <p class="result-label">Result</p>
-                    <p class="result-value"><span class="badge badge-win">Win</span></p>
-                </div>
-                <div class="result-item">
-                    <p class="result-label">Win Amount</p>
-                    <p class="result-value">371.00</p>
-                </div>
-            </div>
+            @endif
         </article>
     </section>
 </main>

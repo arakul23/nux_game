@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('number');
             $table->string('status', 5);
-            $table->float('gain')->default(0);
+            $table->float('amount')->default(0);
             $table->timestamps();
         });
     }

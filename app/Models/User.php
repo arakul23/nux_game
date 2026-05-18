@@ -11,11 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['username', 'phonenumber',])]
+#[Fillable(['username', 'phonenumber', 'link_token'])]
 class User extends Authenticatable
 {
-    public int $id;
-
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

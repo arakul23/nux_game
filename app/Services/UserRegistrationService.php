@@ -11,7 +11,7 @@ class UserRegistrationService
 {
     public function register(array $data): User
     {
-        $data['identifier'] = Str::random(10);
+        $data['link_token'] = (string) Str::uuid();
 
         $user = new User();
         $user->fill($data);

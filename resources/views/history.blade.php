@@ -15,7 +15,7 @@
             <ul class="history-list">
                 @foreach ($history as $key => $item)
                     <li class="history-item">
-                        <span>{{ $loop->iteration }} | Number: {{$item->number}} | Result: {{mb_strtoupper($item->status)}} | Amount: {{$item->gain}}</span>
+                        <span>{{ $loop->iteration }} | Number: {{$item->number}} | Result: <span class="badge {{$item->status === 'win' ? 'badge-win' : 'badge-lose'}}">{{mb_strtoupper($item->status)}}</span> | Amount: {{$item->amount}}</span>
                         <small>{{$item->created_at}}</small>
                     </li>
                 @endforeach
