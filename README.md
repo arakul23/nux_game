@@ -21,40 +21,15 @@
 - MySQL 8
 - Nginx (для Docker-режима)
 
-## Быстрый старт (Docker, рекомендовано)
+## Как поднять проект (докер)
 
-### Требования
-
-- Docker
-- Docker Compose
-
-### Шаги
-
-1. Скопировать env:
-
-```bash
-cp .env.example .env
-```
-
-2. В `.env` установить:
-
-```dotenv
-APP_URL=http://localhost:8083
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=nux_game
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
-3. Запустить контейнеры:
+1. Запустить контейнеры:
 
 ```bash
 docker compose up --build -d
 ```
 
-4. Сгенерировать ключ приложения (один раз):
+2. Сгенерировать ключ приложения (один раз):
 
 ```bash
 docker compose exec php php artisan key:generate
@@ -64,62 +39,7 @@ docker compose exec php php artisan key:generate
 
 `http://localhost:8083`
 
-## Локальный запуск (без Docker)
-
-### Требования
-
-- PHP 8.3+
-- Composer
-- MySQL 8+
-- Node.js 20+ и npm (если нужен Vite dev/build)
-
-### Шаги
-
-1. Установить зависимости:
-
-```bash
-composer install
-```
-
-2. Подготовить env:
-
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-
-3. Настроить БД в `.env`:
-
-```dotenv
-APP_URL=http://127.0.0.1:8000
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nux_game
-DB_USERNAME=root
-DB_PASSWORD=your_password
-```
-
-4. Применить миграции:
-
-```bash
-php artisan migrate
-```
-
-5. Запустить приложение:
-
-```bash
-php artisan serve
-```
-
-Открыть: `http://127.0.0.1:8000`
-
-## Полезные команды
-
-```bash
-php artisan route:list
-php artisan test
-```
+Миграции выполнятся автоматически, .env будет создан на основе .env.example
 
 ## Пользовательский сценарий
 

@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\GambleService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
@@ -47,9 +48,14 @@ class GambleController extends Controller
 
     private function signedRoute(string $routeName, User $user): string
     {
-        return URL::temporarySignedRoute($routeName, now()->addDays(7), [
+        return URL::temporarySignedRoute($routeName, $this->resolveLinkExpiration($user), [
             'user' => $user->id,
             'link_id' => $user->link_token,
         ]);
+    }
+
+    private function resolveLinkExpiration(User $user): Carbon
+    {
+        return $user->link_expires_at ?? now();
     }
 }

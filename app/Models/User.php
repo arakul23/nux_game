@@ -11,11 +11,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['username', 'phonenumber', 'link_token'])]
+#[Fillable(['username', 'phonenumber', 'link_token', 'link_expires_at'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected function casts(): array
+    {
+        return [
+            'link_expires_at' => 'datetime',
+        ];
+    }
 
     public function history(): HasMany
     {

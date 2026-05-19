@@ -19,8 +19,12 @@ class LinkIsValid
     {
         $user = $request->route('user');
 
-        if ($request->query('link_id') !== $user->link_token) {
+        if (!$user->link_token || $request->query('link_id') !== $user->link_token) {
             abort(403, 'Invalid link');
+        }
+
+        if (!$user->link_expires_at || now()->greaterThan($user->link_expires_at)) {
+            abort(403, 'Link expired');
         }
 
         return $next($request);

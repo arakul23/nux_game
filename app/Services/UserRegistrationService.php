@@ -12,6 +12,7 @@ class UserRegistrationService
     public function register(array $data): User
     {
         $data['link_token'] = (string) Str::uuid();
+        $data['link_expires_at'] = now()->addDays(7);
 
         $user = new User();
         $user->fill($data);
