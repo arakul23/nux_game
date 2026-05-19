@@ -13,6 +13,13 @@ class History extends Model
 {
     protected $table = 'history';
 
+    protected function casts(): array
+    {
+        return [
+            'amount' => 'decimal:2',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -23,7 +25,7 @@ class RegisterFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => "required|string|max:20|",
+            'username' => 'required|string|max:20',
             'phonenumber' => 'required|string|min:8|max:15',
         ];
     }

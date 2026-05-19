@@ -19,18 +19,18 @@ class UserRegistrationController extends Controller
     public function register(RegisterFormRequest $request): RedirectResponse
     {
         $user = $this->userRegistrationService->register($request->validated());
+        $link = $this->generateLink($user->id, $user->link_token);
 
-        $url = URL::temporarySignedRoute('gamble_form', now()->addDays(7), ['user' => $user->id, 'link_id' => $user->link_token]);
-
-        return redirect()->to($url)->with(compact('user', 'url'));
+        return redirect()->to($link)->with(compact('user', 'link'));
     }
 
-    public function getLink(User $user): RedirectResponse
+    public function getNewLink(User $user): RedirectResponse
     {
-        $user->update(['link_token' =>  $data['link_token'] = (string) Str::uuid()]);
-        $url = URL::temporarySignedRoute('gamble_form', now()->addDays(7), ['user' => $user->id, 'link_id' => $user->link_token]);
+        $token = (string) Str::uuid();
+        $user->update(['link_token' => $token]);
+        $link = $this->generateLink($user->id, $token);
 
-        return redirect()->to($url)->with(compact('user', 'url'));
+        return redirect()->to($link)->with(compact('user', 'link'));
     }
 
     public function unsignedLink(User $user): RedirectResponse
@@ -40,15 +40,8 @@ class UserRegistrationController extends Controller
         return redirect()->route('welcome');
     }
 
-    private function generateLink(string $userId, string $token): string
+    private function generateLink(int $userId, string $token): string
     {
-      return URL::temporarySignedRoute(
-            'gamble_form',
-            now()->addDays(7),
-            [
-                'user' => $userId,
-                'token' => $token
-            ]
-        );
+      return URL::temporarySignedRoute('gamble_form', now()->addDays(7), ['user' => $userId, 'link_id' => $token]);
     }
 }

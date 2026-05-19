@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\GambleService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+use Illuminate\View\View;
 
 class GambleController extends Controller
 {
@@ -14,13 +17,12 @@ class GambleController extends Controller
     {
     }
 
-    public function index(Request $request, User $user)
+    public function index(User $user): View
     {
-        if ($request->query('link_id') !== $user->link_token) {
-            abort(403, 'Ссылка недействительна.');
-        }
-
-        return view('gamble', compact('user'));
+        return view('gamble', [
+            'user' => $user,
+            'actions' => $this->buildActionLinks($user),
+        ]);
     }
 
     public function getResult(User $user): RedirectResponse
@@ -28,6 +30,26 @@ class GambleController extends Controller
         $result = $this->gambleService->calculateResult();
         $user->history()->create($result);
 
-        return back()->with(['result' => $result]);
+        return redirect()
+            ->to($this->signedRoute('gamble_form', $user))
+            ->with(['result' => $result]);
+    }
+
+    private function buildActionLinks(User $user): array
+    {
+        return [
+            'play' => $this->signedRoute('calculate_gamble', $user),
+            'history' => $this->signedRoute('get_histories', $user),
+            'generate' => $this->signedRoute('generate_link', $user),
+            'revoke' => $this->signedRoute('unsigned_link', $user),
+        ];
+    }
+
+    private function signedRoute(string $routeName, User $user): string
+    {
+        return URL::temporarySignedRoute($routeName, now()->addDays(7), [
+            'user' => $user->id,
+            'link_id' => $user->link_token,
+        ]);
     }
 }

@@ -12,10 +12,10 @@
     <p class="subtitle">Unique link management and lucky game screen</p>
 
     <section class="grid">
-        @if(session('url'))
+        @if(session('link'))
             <article class="card">
                 <h2>Unique Link</h2>
-                <p class="link-box">{{ session('url') }}</p>
+                <p class="link-box">{{ session('link') }}</p>
                 <p class="meta">Link status: Active | Expires in: 7 days</p>
 
             </article>
@@ -23,12 +23,19 @@
         <article class="card">
             <h2>Imfeelinglucky</h2>
             <div class="row">
-                <a href="{{ route('calculate_gamble', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">Imfeelinglucky</button></a>
-                <a href="{{ route('get_histories', [$user['id']]) }}">
-                    <button class="btn btn-secondary" type="button">History</button>
-                </a>
-                <a href="{{ route('generate_link', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">Generate new link</button></a>
-                <a href="{{ route('unsigned_link', [$user['id']]) }}"> <button class="btn btn-secondary" type="button">Unsigned link</button></a>
+                <form method="POST" action="{{ $actions['play'] }}">
+                    @csrf
+                    <button class="btn btn-secondary" type="submit">Imfeelinglucky</button>
+                </form>
+                <a class="btn btn-secondary" href="{{ $actions['history'] }}">History</a>
+                <form method="POST" action="{{ $actions['generate'] }}">
+                    @csrf
+                    <button class="btn btn-secondary" type="submit">Generate new link</button>
+                </form>
+                <form method="POST" action="{{ $actions['revoke'] }}">
+                    @csrf
+                    <button class="btn btn-secondary" type="submit">Unsigned link</button>
+                </form>
             </div>
 
             @if(session()->has('result'))

@@ -30,12 +30,11 @@ readonly class GambleService
 
     private function calculateAmount(int $number): float
     {
-        return match (true) {
+        return round(match (true) {
             $number > 900 => ($number * 70) / 100,
-            $number > 600 && $number < 900 => ($number * 50) / 100,
-            $number > 300 && $number < 600 => ($number * 30) / 100,
-            $number <= 300 => ($number * 10) / 100,
-            default => 0,
-        };
+            $number > 600 => ($number * 50) / 100,
+            $number > 300 => ($number * 30) / 100,
+            default => ($number * 10) / 100,
+        }, 2);
     }
 }
